@@ -1,0 +1,23 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-unused-vars": "error", // var use kora jabe na
+    "no-unused-expressions": "error", // useless expressions get
+    "prefer-const": "error", // reassign na hole const use korte hobe
+    "no-console": "warn", // clg thakle warning dibe
+    "no-undef": "error" // kono value undefined thakte parbena
+  },
+  "globals": {
+    "process": "readonly" // using for globally
+  }
+}
