@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
 
 import {
   TGuardian,
@@ -9,8 +8,7 @@ import {
   TUserName,
   StudentModel,
   // StudentMethods,
-} from './student/student.interface';
-import config from '../config';
+} from './student.interface';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -104,11 +102,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       trim: true,
       required: [true, 'ID is required!'],
     },
-    password: {
-      type: String,
-      trim: true,
-      required: [true, 'password is required!'],
-      maxlength: [20, '{VALUE} cannot be more than 20 characters!'],
+    user: {
+      type : Schema.Types.ObjectId,
+      required: [true, "user is required!"],
+      unique: true,
+      ref: "User"
     },
     name: {
       type: userNameSchema,
@@ -167,11 +165,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local guardian is required!'],
     },
     profileImg: { type: String },
-    isActive: {
-      type: String,
-      enum: ['active', 'inactive'],
-      default: 'active',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -186,21 +179,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // virtual
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-
-// document middleware/hook -v8
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // query middleware
@@ -219,15 +197,9 @@ studentSchema.pre('aggregate', async function (next) {
 });
 
 // creating a custom static method -v7
-studentSchema.statics.isUserExists = async function (id: strung) {
+studentSchema.statics.isUserExists = async function (id: string) {
   const existUser = Student.findOne({ id });
   return existUser;
 };
-
-// for creating custom instance method -v6
-// studentSchema.methods.isUserExists = async function (id:string) {
-//   const existUser = await Student.findOne({id});
-//   return existUser;
-// }
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
