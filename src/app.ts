@@ -13,6 +13,11 @@ app.use(cors());
 // application routes
 app.use('/api/v1', router);
 
+// const test = (req, res) => {
+//   // Promise.reject("custom error");
+//   res.send("hell")
+// };
+// app.get('/test', test);
 app.get('/', (req: Request, res: Response) => {
   const text: string = 'Hello World!';
 

@@ -7,7 +7,7 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "name is required!"],
       unique: true,
     },
     academicFaculty: {
@@ -21,15 +21,15 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>(
   },
 );
 
-academicDepartmentSchema.pre('save', async function (next) {
-  const isExistsDepartment = await AcademicDepartment.findOne({
-    name: this.name,
-  });
-  if (isExistsDepartment) {
-    throw new AppError(httpStatus.FAILED_DEPENDENCY , this.name + ' ' + 'is already exists!');
-  }
-  next();
-});
+// academicDepartmentSchema.pre('save', async function (next) {
+//   const isExistsDepartment = await AcademicDepartment.findOne({
+//     name: this.name,
+//   });
+//   if (isExistsDepartment) {
+//     throw new AppError(httpStatus.FAILED_DEPENDENCY , this.name + ' ' + 'is already exists!');
+//   }
+//   next();
+// });
 
 academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

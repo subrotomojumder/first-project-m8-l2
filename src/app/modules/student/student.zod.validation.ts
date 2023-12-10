@@ -1,11 +1,34 @@
 import { z } from 'zod';
 
 // Define Zod schemas for sub-schemas
-const userNameValidationSchema = z.object({
-  firstName: z.string().trim().min(1).max(20),
-  middleName: z.string().trim(),
-  lastName: z.string().trim().min(1),
-});
+const userNameValidationSchema = z
+  .object({
+    firstName: z
+      .string()
+      .trim()
+      .refine(
+        (data) => {
+          if (data.length < 10) {
+            return false;
+          }
+        },
+        {
+          message: 'first name must be less 10 characters!',
+        },
+      ), // ekhane firstName er value length jodi 5 er kom and 20 er beshi hoi error e message ta jabe.
+    middleName: z.string().trim().optional(),
+    lastName: z.string().trim().min(1),
+  })
+  .refine((data) => {
+    if (!data.middleName) {
+      return true;
+    }
+    if (data.middleName === data.lastName) {
+      return false;
+    }
+  },{
+    message: "middle name and last name can't be same!"
+  }); // ekhane userValidationSchema te jodi middleName jodi dei and middleName r lastName same hoi error e message ta jabe.
 
 const guardianValidationSchema = z.object({
   fatherName: z.string().trim().min(1),
@@ -42,8 +65,8 @@ const createStudentZodValidationSchema = z.object({
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
       admissionSemester: z.string(),
-     academicDepartment: z.string(),
-      profileImg: z.string().optional()
+      academicDepartment: z.string(),
+      profileImg: z.string().optional(),
     }),
   }),
 });
@@ -96,5 +119,5 @@ const updateStudentZodValidationSchema = z.object({
 });
 export const studentValidations = {
   createStudentZodValidationSchema,
-  updateStudentZodValidationSchema
+  updateStudentZodValidationSchema,
 };
