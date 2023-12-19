@@ -7,7 +7,7 @@ const userSchema = new Schema<TUser>(
   {
     id: {
       type: String,
-      unique: true ,
+      unique: true,
       required: true,
     },
     password: {
@@ -48,6 +48,7 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
+
 // set empty-string after saving password
 userSchema.post('save', function (doc, next) {
   doc.password = '';

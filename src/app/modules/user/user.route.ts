@@ -1,5 +1,5 @@
 import { UserControllers } from './user.controller';
-import { studentValidations } from '../student/student.zod.validation';
+import { studentValidations } from '../Student/student.zod.validation';
 import { Router } from 'express';
 import validateRequest from '../../middleware/validateRequest';
 import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
