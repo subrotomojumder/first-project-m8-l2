@@ -10,6 +10,7 @@ import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppErrors';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
@@ -34,7 +35,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message = simplifiedError?.message;
     errorSources = simplifiedError.errorSources;
   } else if (error?.name === 'CastError') {
-  // } else if (error instanceof mongoose.Error.CastError) {
+    // } else if (error instanceof mongoose.Error.CastError) {
     // mongoose cast error handle
     const simplifiedError = handleCastError(error);
     statusCode = simplifiedError?.statusCode;
@@ -50,6 +51,14 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     // console.log(error.message);
     statusCode = error?.statusCode;
     message = error?.message;
+    errorSources = [
+      {
+        path: '',
+        message: error?.message,
+      },
+    ];
+  } else if (error instanceof JsonWebTokenError) {
+    message = error?.name;
     errorSources = [
       {
         path: '',
