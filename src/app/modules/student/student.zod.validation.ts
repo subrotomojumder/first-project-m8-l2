@@ -19,7 +19,7 @@ const userNameValidationSchema = z
   //   {
   //     message: "middle name and last name can't be same!",
   //   },
-  // ); // ekhane userValidationSchema te jodi middleName jodi dei and middleName r lastName same hoi error e message ta jabe.
+  // ); // ekhane userNameValidationSchema te jodi middleName jodi dei and middleName r lastName same hoi error e message ta jabe.
 
 const guardianValidationSchema = z.object({
   fatherName: z.string().trim().min(1),
@@ -40,7 +40,7 @@ const localGuardianValidationSchema = z.object({
 // Define Zod schema for Student
 const createStudentZodValidationSchema = z.object({
   body: z.object({
-    password: z.string().trim().min(6).max(20),
+    password: z.string().trim().min(6).max(20).optional(),
     student: z.object({
       name: userNameValidationSchema,
       gender: z.enum(['male', 'female', 'others']),
