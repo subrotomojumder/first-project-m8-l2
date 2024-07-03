@@ -1,6 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import { Grade } from './enrolledCourse.constant';
-import { TEnrolledCourse, TEnrolledCourseMarks } from './enrolledCourse.interface';
+import {
+  TEnrolledCourse,
+  TEnrolledCourseMarks,
+} from './enrolledCourse.interface';
 
 const courseMarksSchema = new Schema<TEnrolledCourseMarks>(
   {
@@ -81,7 +84,7 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
   },
   courseMarks: {
     type: courseMarksSchema,
-    default: {}, // {} bracket use korle courseMarksSchema default bosbe.
+    default: {},
   },
   grade: {
     type: String,
@@ -100,7 +103,9 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
   },
 });
 
-export const EnrolledCourse = mongoose.model<TEnrolledCourse>(
+const EnrolledCourse = mongoose.model<TEnrolledCourse>(
   'EnrolledCourse',
   enrolledCourseSchema,
 );
+
+export default EnrolledCourse;
