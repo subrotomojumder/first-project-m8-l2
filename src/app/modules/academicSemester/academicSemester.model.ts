@@ -1,12 +1,10 @@
 import { Schema, model } from 'mongoose';
-import { TAcademicSemester } from './academicSemester.interface';
 import {
   AcademicSemesterCode,
   AcademicSemesterName,
   Months,
 } from './academicSemester.constant';
-import AppError from '../../errors/AppErrors';
-import httpStatus from 'http-status';
+import { TAcademicSemester } from './academicSemester.interface';
 
 const academicSemesterSchema = new Schema<TAcademicSemester>(
   {
@@ -15,24 +13,24 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
       required: true,
       enum: AcademicSemesterName,
     },
-    code: {
-      type: String,
-      enum: AcademicSemesterCode,
-      required: true,
-    },
     year: {
       type: String,
       required: true,
     },
+    code: {
+      type: String,
+      required: true,
+      enum: AcademicSemesterCode,
+    },
     startMonth: {
       type: String,
-      enum: Months,
       required: true,
+      enum: Months,
     },
     endMonth: {
       type: String,
-      enum: Months,
       required: true,
+      enum: Months,
     },
   },
   {
@@ -45,11 +43,11 @@ academicSemesterSchema.pre('save', async function (next) {
     year: this.year,
     name: this.name,
   });
+
   if (isSemesterExists) {
-    throw new AppError(httpStatus.BAD_REQUEST ,'Semester is already exists!');
-  } else {
-    next();
+    throw new Error('Semester is already exists !');
   }
+  next();
 });
 
 export const AcademicSemester = model<TAcademicSemester>(

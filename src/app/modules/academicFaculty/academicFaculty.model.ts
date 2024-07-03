@@ -18,3 +18,4 @@ export const AcademicFaculty = model<TAcademicFaculty>(
   'AcademicFaculty',
   academicFacultySchema,
 );
+
