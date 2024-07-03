@@ -1,37 +1,46 @@
-import { Router } from 'express';
-import validateRequest from '../../middleware/validateRequest';
-import { AuthValidationSchema } from './auth.validation';
+import express from 'express';
 import { AuthControllers } from './auth.controller';
-import { USER_ROLE } from '../user/user.constant';
+import { AuthValidation } from './auth.validation';
+import validateRequest from '../../middleware/validateRequest';
 import auth from '../../middleware/auth';
+import { USER_ROLE } from '../user/user.constant';
 
-const router = Router();
+const router = express.Router();
+
 router.post(
   '/login',
-  validateRequest(AuthValidationSchema.loginValidationSchema),
+  validateRequest(AuthValidation.loginValidationSchema),
   AuthControllers.loginUser,
 );
+
 router.post(
   '/change-password',
-  auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
-  validateRequest(AuthValidationSchema.passChangeValidationSchema),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  validateRequest(AuthValidation.changePasswordValidationSchema),
   AuthControllers.changePassword,
 );
+
 router.post(
   '/refresh-token',
-  validateRequest(AuthValidationSchema.refreshTokenValidationSchema),
+  validateRequest(AuthValidation.refreshTokenValidationSchema),
   AuthControllers.refreshToken,
 );
+
 router.post(
   '/forget-password',
-  validateRequest(AuthValidationSchema.forgetPasswordValidationSchema),
+  validateRequest(AuthValidation.forgetPasswordValidationSchema),
   AuthControllers.forgetPassword,
 );
+
 router.post(
   '/reset-password',
-  validateRequest(AuthValidationSchema.resetPasswordValidationSchema),
+  validateRequest(AuthValidation.resetPasswordValidationSchema),
   AuthControllers.resetPassword,
 );
-
 
 export const AuthRoutes = router;
