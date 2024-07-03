@@ -32,7 +32,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     role: {
       type: String,
-      enum: ['student', 'admin', 'faculty'],
+      enum: ['superAdmin', 'student', 'admin', 'faculty'],
     },
     status: {
       type: String,
@@ -57,7 +57,7 @@ userSchema.pre('save', async function (next) {
     user.password,
     Number(config.bcrypt_salt_rounds),
   );
-  next();
+  next(); 
 });
 
 // set empty-string after saving password

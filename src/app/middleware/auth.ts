@@ -17,7 +17,6 @@ const auth = (...requiredRoles: TUserRole[]) => {
     // check if the token is valid
     const decoded = verifyToken(token, config.jwt_access_secret as string);
     const { role, userId, iat } = decoded;
-
     const user = await User.isUserExistsByCustomId(userId);
     // check if user is exist
     if (!user) {

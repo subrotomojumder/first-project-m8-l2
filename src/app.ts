@@ -9,8 +9,8 @@ const app: Application = express();
 
 //parsers
 app.use(express.json());
-app.use(cookieParser())
-app.use(cors({origin: ['http://localhost:5173']})); // origin e frontend root url dite hobe corse error na dorar jonno
+app.use(cookieParser());
+app.use(cors({ origin: ['http://localhost:5173'] })); // origin e frontend root url dite hobe corse error na dorar jonno
 
 // application routes
 app.use('/api/v1', router);
@@ -21,9 +21,7 @@ app.use('/api/v1', router);
 // };
 // app.get('/test', test);
 app.get('/', (req: Request, res: Response) => {
-  const text: string = 'Hello World!';
-
-  res.send(text);
+  res.send({ message: 'Hi! Welcome to my university operating server app!' });
 });
 
 // global error handler
