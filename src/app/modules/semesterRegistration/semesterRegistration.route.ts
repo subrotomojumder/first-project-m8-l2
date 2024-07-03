@@ -1,34 +1,56 @@
-import { Router } from 'express';
-import validateRequest from '../../middleware/validateRequest';
+import express from 'express';
+import { SemesterRegistrationController } from './semesterRegistration.controller';
 import { SemesterRegistrationValidations } from './semesterRegistration.validation';
-import { SemesterRegistrationControllers } from './semesterRegistration.controller';
+import auth from '../../middleware/auth';
+import { USER_ROLE } from '../user/user.constant';
+import validateRequest from '../../middleware/validateRequest';
 
-const router = Router();
+const router = express.Router();
 
 router.post(
   '/create-semester-registration',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
-    SemesterRegistrationValidations.createSemesterRegistrationValidation,
+    SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
-  SemesterRegistrationControllers.createSemesterRegistration,
-);
-router.get(
-  '/:id',
-  SemesterRegistrationControllers.getSingleSemesterRegistration,
+  SemesterRegistrationController.createSemesterRegistration,
 );
 
-router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration);
+router.get(
+  '/:id',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  SemesterRegistrationController.getSingleSemesterRegistration,
+);
+
 router.patch(
   '/:id',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
-    SemesterRegistrationValidations.updateSemesterRegistrationValidation,
+    SemesterRegistrationValidations.updateSemesterRegistrationValidationSchema,
   ),
-  SemesterRegistrationControllers.updateSemesterRegistration,
+  SemesterRegistrationController.updateSemesterRegistration,
 );
 
 router.delete(
   '/:id',
-  SemesterRegistrationControllers.deleteSemesterRegistration,
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  SemesterRegistrationController.deleteSemesterRegistration,
 );
 
-export const SemesterRegistrationRoutes = router;
+router.get(
+  '/',
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
+  SemesterRegistrationController.getAllSemesterRegistrations,
+);
+
+export const semesterRegistrationRoutes = router;

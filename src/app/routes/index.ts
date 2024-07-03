@@ -7,21 +7,29 @@ import { AcademicDepartmentRoutes } from '../modules/academicDepartment/academic
 import { FacultyRoutes } from '../modules/Faculty/faculty.route';
 import { AdminRoutes } from '../modules/Admin/admin.route';
 import { CourseRoutes } from '../modules/course/course.route';
-import { SemesterRegistrationRoutes } from '../modules/semesterRegistration/semesterRegistration.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { EnrolledCourseRoutes } from '../modules/EnrolledCourse/enrolledCourse.route';
 import { offeredCourseRoutes } from '../modules/OfferedCourse/offeredCourse.route';
+import { semesterRegistrationRoutes } from '../modules/semesterRegistration/semesterRegistration.route';
 
 const router = Router();
 
 const moduleRoutes = [
   {
+    path: '/users',
+    routeName: UserRoutes,
+  },
+  {
     path: '/students',
     routeName: StudentRoutes,
   },
   {
-    path: '/users',
-    routeName: UserRoutes,
+    path: '/faculties',
+    routeName: FacultyRoutes,
+  },
+  {
+    path: '/admins',
+    routeName: AdminRoutes,
   },
   {
     path: '/academic-semesters',
@@ -36,20 +44,12 @@ const moduleRoutes = [
     routeName: AcademicDepartmentRoutes,
   },
   {
-    path: '/faculties',
-    routeName: FacultyRoutes,
-  },
-  {
-    path: '/admins',
-    routeName: AdminRoutes,
-  },
-  {
     path: '/courses',
     routeName: CourseRoutes,
   },
   {
-    path: '/semester-registration',
-    routeName: SemesterRegistrationRoutes,
+    path: '/semester-registrations',
+    routeName: semesterRegistrationRoutes,
   },
   {
     path: '/offered-courses',

@@ -1,30 +1,37 @@
-import { UserControllers } from './user.controller';
-import { studentValidations } from '../Student/student.zod.validation';
-import { Router } from 'express';
-import validateRequest from '../../middleware/validateRequest';
-import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
-import { createAdminValidationSchema } from '../Admin/admin.validation';
-import auth from '../../middleware/auth';
-import { USER_ROLE } from './user.constant';
-import { userValidations } from './user.zod.validation';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import express, { NextFunction, Request, Response } from 'express';
 import { upload } from '../../utils/sendImageToCloudinary';
+import { createAdminValidationSchema } from '../Admin/admin.validation';
+import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
+import { USER_ROLE } from './user.constant';
+import { UserControllers } from './user.controller';
+import auth from '../../middleware/auth';
+import validateRequest from '../../middleware/validateRequest';
+import { createStudentValidationSchema } from '../Student/student.zod.validation';
+import { UserValidation } from './user.zod.validation';
 
-const router = Router();
+const router = express.Router();
 
 router.post(
   '/create-student',
-  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   upload.single('file'),
-  (req, res, next) => {
+  (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
     next();
   },
-  validateRequest(studentValidations.createStudentZodValidationSchema),
+  validateRequest(createStudentValidationSchema),
   UserControllers.createStudent,
 );
+
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(createFacultyValidationSchema),
   UserControllers.createFaculty,
 );
@@ -32,18 +39,30 @@ router.post(
 router.post(
   '/create-admin',
   auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );
-router.patch(
+
+router.post(
   '/change-status/:id',
-  auth(USER_ROLE.admin, USER_ROLE.superAdmin),
-  validateRequest(userValidations.changeStatusValidationSchema),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  validateRequest(UserValidation.changeStatusValidationSchema),
   UserControllers.changeStatus,
 );
+
 router.get(
   '/me',
-  auth('admin', 'faculty', 'student', 'superAdmin'),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student,
+  ),
   UserControllers.getMe,
 );
 

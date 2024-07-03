@@ -1,38 +1,49 @@
-import { UsersServices } from './user.service';
-import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
+import { UserServices } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
-  const result = await UsersServices.createStudentInToDB(
+  const result = await UserServices.createStudentIntoDB(
     req.file,
     password,
     studentData,
   );
+
   sendResponse(res, {
-    success: true,
     statusCode: httpStatus.OK,
-    message: 'Student is successfully created!',
+    success: true,
+    message: 'Student is created successfully',
     data: result,
   });
 });
+
 const createFaculty = catchAsync(async (req, res) => {
   const { password, faculty: facultyData } = req.body;
 
-  const result = await UsersServices.createFacultyIntoDB(password, facultyData);
+  const result = await UserServices.createFacultyIntoDB(
+    req.file,
+    password,
+    facultyData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is created succesfully',
+    message: 'Faculty is created successfully',
     data: result,
   });
 });
 
 const createAdmin = catchAsync(async (req, res) => {
   const { password, admin: adminData } = req.body;
-  const result = await UsersServices.createAdminIntoDB(password, adminData);
+
+  const result = await UserServices.createAdminIntoDB(
+    req.file,
+    password,
+    adminData,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -42,26 +53,27 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const changeStatus = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await UsersServices.changeStatus(id, req.body);
+const getMe = catchAsync(async (req, res) => {
+  const { userId, role } = req.user;
+  const result = await UserServices.getMe(userId, role);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User status updated successfully',
+    message: 'User is retrieved successfully',
     data: result,
   });
 });
 
-const getMe = catchAsync(async (req, res) => {
-  const { role, userId } = req.user;
-  const result = await UsersServices.getMe(role, userId);
+const changeStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  const result = await UserServices.changeStatus(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'User is retrieve successfully',
+    message: 'Status is updated successfully',
     data: result,
   });
 });
