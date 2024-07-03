@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
-import QueryBuilder from '../../builder/QueryBuilder';
-import { User } from '../user/user.model';
 import { FacultySearchableFields } from './faculty.constant';
 import { TFaculty } from './faculty.interface';
 import { Faculty } from './faculty.model';
+import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppErrors';
+import { User } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
-    Faculty.find().populate('academicDepartment'),
+    Faculty.find().populate('academicDepartment academicFaculty'),
     query,
   )
     .search(FacultySearchableFields)
@@ -20,11 +20,17 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await facultyQuery.modelQuery;
-  return result;
+  const meta = await facultyQuery.countTotal();
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleFacultyFromDB = async (id: string) => {
-  const result = await Faculty.findById(id).populate('academicDepartment');
+  const result = await Faculty.findById(id).populate(
+    'academicDepartment academicFaculty',
+  );
 
   return result;
 };

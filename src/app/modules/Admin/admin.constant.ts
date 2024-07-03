@@ -22,3 +22,4 @@ export const AdminSearchableFields = [
   'name.lastName',
   'name.middleName',
 ];
+
